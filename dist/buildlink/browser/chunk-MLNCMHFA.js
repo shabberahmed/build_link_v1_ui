@@ -1,0 +1,1 @@
+import{Da as t,Fb as a,M as n}from"./chunk-OPBUSO2E.js";var o=class i{i18n=n(a);transform(r,e){return this.i18n.label(e,r)}static \u0275fac=function(e){return new(e||i)};static \u0275pipe=t({name:"locLabel",type:i,pure:!1})};export{o as a};
