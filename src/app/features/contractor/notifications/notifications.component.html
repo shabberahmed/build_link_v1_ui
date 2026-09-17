@@ -1,0 +1,33 @@
+<div class="notifications-page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">{{ 'notif.title' | t }}</h1>
+      <p class="page-sub">{{ 'notif.sub' | t }}</p>
+    </div>
+    @if (store.unreadCount()) {
+      <app-button variant="outline" size="sm" (btnClick)="store.markAllAsRead()">{{ 'notif.markAll' | t }}</app-button>
+    }
+  </div>
+
+  <app-card>
+    <div class="notif-list">
+      @for (n of store.notifications(); track n.id) {
+        <div [class]="'notif-item' + (!n.read ? ' unread' : '')" (click)="openNotification(n)">
+          <div class="n-icon">🔔</div>
+          <div class="n-body">
+            <div class="n-top">
+              <h4 class="n-title">{{ i18n.entity('notif', n.id, 'title', n.title) }}</h4>
+              <span class="n-time">{{ n.timestamp | t }}</span>
+            </div>
+            <p class="n-msg">{{ i18n.entity('notif', n.id, 'message', n.message) }}</p>
+          </div>
+          @if (!n.read) {
+            <span class="dot-unread"></span>
+          }
+        </div>
+      } @empty {
+        <p class="empty-text">{{ 'notif.empty' | t }}</p>
+      }
+    </div>
+  </app-card>
+</div>

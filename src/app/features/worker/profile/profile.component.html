@@ -1,0 +1,49 @@
+<div class="worker-prof-page">
+  @if (store.profile(); as p) {
+    <app-card>
+      <div class="prof-header">
+        <app-avatar [src]="p.avatar" [name]="p.name" size="xl"></app-avatar>
+        <div class="prof-meta">
+          <h2 class="p-name">{{ p.name }}</h2>
+          <p class="p-trade">{{ 'workerProf.yearsExp' | t: { trade: (p.trade | locLabel:'trade'), years: p.experienceYears } }}</p>
+          <div class="p-rating">
+            <span class="star">★★★★★</span>
+            <span class="num">{{ p.rating }} / 5.0</span>
+          </div>
+          <p class="p-loc">📍 {{ p.location }} • {{ p.phone }}</p>
+          <a routerLink="/worker/availability">
+            <app-button variant="primary" size="sm">{{ 'workerProf.updateAvail' | t }}</app-button>
+          </a>
+        </div>
+      </div>
+    </app-card>
+
+    <app-card>
+      <div class="prof-metrics">
+        <div class="pm-box">
+          <span class="lbl">{{ 'workerProf.targetRate' | t }}</span>
+          <span class="val rate">₹{{ p.dailyRate }}{{ 'common.perDay' | t }}</span>
+        </div>
+        <div class="pm-box">
+          <span class="lbl">{{ 'workerProf.attendance' | t }}</span>
+          <span class="val">{{ p.attendanceRate }}%</span>
+        </div>
+        <div class="pm-box">
+          <span class="lbl">{{ 'workerProf.retention' | t }}</span>
+          <span class="val">{{ p.retentionRate }}%</span>
+        </div>
+      </div>
+    </app-card>
+
+    <app-card>
+      <div class="skills-box">
+        <h3>{{ 'workerProf.certified' | t }}</h3>
+        <div class="chips">
+          @for (sk of p.secondarySkills; track sk) {
+            <span class="sk-chip">{{ i18n.skill(sk) }}</span>
+          }
+        </div>
+      </div>
+    </app-card>
+  }
+</div>

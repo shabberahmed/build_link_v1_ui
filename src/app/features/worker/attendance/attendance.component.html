@@ -1,0 +1,23 @@
+<div class="worker-att-page">
+  <div class="w-title">
+    <h2>{{ 'workerAtt.title' | t }}</h2>
+    <p>{{ 'workerAtt.sub' | t }}</p>
+  </div>
+
+  <app-card>
+    <div class="att-history-list">
+      @for (att of store.attendance(); track att.id) {
+        <div class="att-row">
+          <div class="att-info">
+            <span class="att-date">{{ att.date }}</span>
+            <span class="att-site">{{ i18n.entity('project', att.projectId, 'name', att.projectName) }}</span>
+          </div>
+          <div class="att-hours">{{ 'workerAtt.hours' | t: { hours: att.hoursWorked } }}</div>
+          <app-badge [variant]="att.status === 'PRESENT' || att.status === 'OVERTIME' ? 'available' : 'on-leave'">
+            {{ att.status | locLabel:'attendance' }}
+          </app-badge>
+        </div>
+      }
+    </div>
+  </app-card>
+</div>

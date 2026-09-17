@@ -1,0 +1,14 @@
+<div class="loader" [class.compact]="compact()" role="status" [attr.aria-label]="messageKey() | t">
+  <div class="hoist" aria-hidden="true">
+    <span class="jib"></span>
+    <span class="cable"></span>
+    <span class="hook"></span>
+    <span class="ring"></span>
+    <span class="mark">BL</span>
+    <span class="pulse"></span>
+  </div>
+  @if (!compact()) {
+    <p class="copy">{{ messageKey() | t }}</p>
+    <span class="rail"><span class="trolley"></span></span>
+  }
+</div>

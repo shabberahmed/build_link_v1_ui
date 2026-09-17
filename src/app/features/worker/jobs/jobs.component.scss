@@ -1,0 +1,63 @@
+.worker-jobs-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  .w-title {
+    h2 { font-size: 1.35rem; font-weight: 800; color: var(--color-primary); }
+    p { font-size: 0.8125rem; color: var(--color-text-muted); }
+  }
+
+  .apply-banner {
+    background: #d1fae5;
+    color: #065f46;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+
+  .jobs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .job-card-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+
+      .j-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .j-trade { font-size: 1.05rem; font-weight: 800; color: var(--color-text-main); }
+      }
+
+      .j-contractor {
+        font-size: 0.875rem;
+        color: var(--color-text-muted);
+      }
+
+      .j-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        font-size: 0.875rem;
+        background-color: var(--color-bg-app);
+        padding: 0.6rem 0.75rem;
+        border-radius: var(--radius-md);
+
+        .rate { font-weight: 800; color: #047857; }
+      }
+
+      .j-actions {
+        display: flex;
+        justify-content: flex-end;
+        border-top: 1px solid var(--color-border-subtle);
+        padding-top: 0.5rem;
+      }
+    }
+  }
+}

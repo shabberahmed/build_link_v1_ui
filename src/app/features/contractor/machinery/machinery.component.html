@@ -1,0 +1,180 @@
+<div class="machinery-page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">{{ 'plant.title' | t }}</h1>
+      <p class="page-sub">
+        {{ 'plant.sub' | t: { listings: store.totalCount(), units: store.unitCount(), idle: store.availableCount() } }}
+      </p>
+    </div>
+    <app-button variant="primary" size="md" (btnClick)="openAdd()">{{ 'plant.addMachine' | t }}</app-button>
+  </div>
+
+  <div class="filter-toolbar">
+    <div class="search-wrap">
+      <app-search-input
+        [placeholder]="'plant.search' | t"
+        [value]="store.searchQuery()"
+        (valueChange)="onSearch($event)">
+      </app-search-input>
+    </div>
+
+    <div class="pills-scroll">
+      <span class="filter-label">{{ 'plant.type' | t }}</span>
+      @for (type of typesList; track type) {
+        <button
+          [class]="'filter-pill' + (store.selectedType() === type ? ' active' : '')"
+          (click)="selectType(type)">
+          {{ type | locLabel:'machineryType' }}
+        </button>
+      }
+    </div>
+
+    <div class="pills-scroll">
+      <span class="filter-label">{{ 'plant.status' | t }}</span>
+      @for (st of statusList; track st) {
+        <button
+          [class]="'filter-pill' + (store.selectedStatus() === st ? ' active' : '')"
+          (click)="selectStatus(st)">
+          {{ st | locLabel:'machineryStatus' }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="machine-grid">
+    @for (item of store.filteredItems(); track item.id) {
+      <article class="machine-card">
+        <div class="card-top">
+          <h3>{{ item.name }}</h3>
+          <app-badge [variant]="badgeVariant(item.status)">{{ item.status | locLabel:'machineryStatus' }}</app-badge>
+        </div>
+        <p class="type-line">{{ 'plant.unitsLine' | t: { type: typeLabel(item.type, item.customType), count: item.quantity, unit: item.quantity > 1 ? ('common.units' | t) : ('common.unit' | t) } }}</p>
+        <div class="meta">
+          <div>
+            <span class="lbl">{{ 'plant.yard' | t }}</span>
+            <span>{{ item.location }}</span>
+          </div>
+          <div>
+            <span class="lbl">{{ 'plant.hire' | t }}</span>
+            <span class="rate">₹{{ item.dailyHireRate }}{{ 'common.perDay' | t }}</span>
+          </div>
+        </div>
+        @if (item.assignedProjectName) {
+          <p class="site">{{ 'plant.onSite' | t: { name: i18n.entity('project', item.assignedProjectId ?? '', 'name', item.assignedProjectName) } }}</p>
+        }
+        <div class="card-actions">
+          <app-button variant="outline" size="sm" (btnClick)="openDetail(item)">{{ 'plant.viewDetails' | t }}</app-button>
+          @if (item.status === 'AVAILABLE') {
+            <app-button variant="primary" size="sm" (btnClick)="openAssign(item)">{{ 'plant.assignSite' | t }}</app-button>
+          }
+        </div>
+      </article>
+    } @empty {
+      <div class="no-results">
+        <p>{{ 'plant.noMatch' | t }}</p>
+        <app-button variant="outline" size="sm" (btnClick)="selectType('ALL'); selectStatus('ALL'); onSearch('')">{{ 'common.reset' | t }}</app-button>
+      </div>
+    }
+  </div>
+
+  <app-modal [isOpen]="isAddOpen()" [title]="'plant.addMachine' | t" (closeModal)="closeAdd()">
+    <form [formGroup]="addForm" (ngSubmit)="submitAdd()" class="add-form">
+      <div class="form-group">
+        <label class="form-label">{{ 'plant.machineName' | t }}</label>
+        <input type="text" formControlName="name" class="form-input" [placeholder]="'plant.namePh' | t" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">{{ 'plant.typeStar' | t }}</label>
+          <select formControlName="type" class="form-input">
+            @for (type of typesList; track type) {
+              @if (type !== 'ALL') {
+                <option [value]="type">{{ type | locLabel:'machineryType' }}</option>
+              }
+            }
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">{{ 'plant.quantity' | t }}</label>
+          <input type="number" formControlName="quantity" class="form-input" min="1" />
+        </div>
+      </div>
+      @if (selectedAddType() === 'OTHER') {
+        <div class="form-group">
+          <label class="form-label">{{ 'plant.customType' | t }}</label>
+          <input type="text" formControlName="customType" class="form-input" [placeholder]="'plant.customPh' | t" />
+        </div>
+      }
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">{{ 'plant.location' | t }}</label>
+          <input type="text" formControlName="location" class="form-input" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">{{ 'plant.hireRate' | t }}</label>
+          <input type="number" formControlName="dailyHireRate" class="form-input" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">{{ 'plant.condition' | t }}</label>
+        <select formControlName="condition" class="form-input">
+          <option value="EXCELLENT">{{ 'enum.condition.EXCELLENT' | t }}</option>
+          <option value="GOOD">{{ 'enum.condition.GOOD' | t }}</option>
+          <option value="FAIR">{{ 'enum.condition.FAIR' | t }}</option>
+          <option value="NEEDS_SERVICE">{{ 'enum.condition.NEEDS_SERVICE' | t }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">{{ 'plant.notes' | t }}</label>
+        <textarea formControlName="notes" class="form-input" rows="3"></textarea>
+      </div>
+      <div class="form-actions">
+        <app-button type="button" variant="ghost" (btnClick)="closeAdd()">{{ 'common.cancel' | t }}</app-button>
+        <app-button type="submit" variant="primary" [disabled]="addForm.invalid || (selectedAddType() === 'OTHER' && !addForm.controls.customType.value.trim())">{{ 'plant.addToYard' | t }}</app-button>
+      </div>
+    </form>
+  </app-modal>
+
+  @if (selected(); as item) {
+    <app-modal [isOpen]="true" [title]="item.name" (closeModal)="closeDetail()">
+      <div class="detail">
+        <div class="detail-head">
+          <app-badge [variant]="badgeVariant(item.status)">{{ item.status | locLabel:'machineryStatus' }}</app-badge>
+          <p>{{ 'plant.unitsLine' | t: { type: typeLabel(item.type, item.customType), count: item.quantity, unit: item.quantity > 1 ? ('common.units' | t) : ('common.unit' | t) } }}</p>
+        </div>
+        <div class="stats">
+          <div><span>{{ 'plant.hire' | t }}</span><strong>₹{{ item.dailyHireRate }}{{ 'common.perDay' | t }}</strong></div>
+          <div><span>{{ 'plant.condition' | t }}</span><strong>{{ item.condition | locLabel:'condition' }}</strong></div>
+          <div><span>{{ 'plant.yard' | t }}</span><strong>{{ item.location }}</strong></div>
+        </div>
+        @if (item.assignedProjectName) {
+          <p>{{ 'plant.assignedTo' | t: { name: i18n.entity('project', item.assignedProjectId ?? '', 'name', item.assignedProjectName) } }}</p>
+        }
+        @if (item.notes) {
+          <p class="notes">{{ i18n.entity('machinery', item.id, 'notes', item.notes) }}</p>
+        }
+        @if (item.status === 'AVAILABLE') {
+          <div class="form-actions">
+            <app-button variant="primary" (btnClick)="openAssign(item)">{{ 'plant.assignSite' | t }}</app-button>
+          </div>
+        }
+      </div>
+    </app-modal>
+  }
+
+  @if (assigning(); as item) {
+    <app-modal [isOpen]="true" [stacked]="!!selected()" [title]="'plant.assignTitle' | t: { name: item.name }" (closeModal)="closeAssign()">
+      <div class="assign-list">
+        <p>{{ 'plant.selectSite' | t }}</p>
+        @for (proj of projectStore.projects(); track proj.id) {
+          <button type="button" class="assign-row" (click)="confirmAssign(proj.id)">
+            <span class="ar-name">{{ i18n.entity('project', proj.id, 'name', proj.name) }}</span>
+            <span class="ar-meta">{{ proj.location }} · {{ proj.status | locLabel:'projectStatus' }}</span>
+          </button>
+        } @empty {
+          <p>{{ 'plant.noProjects' | t }}</p>
+        }
+      </div>
+    </app-modal>
+  }
+</div>

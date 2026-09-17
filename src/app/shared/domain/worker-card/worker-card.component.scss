@@ -1,0 +1,60 @@
+.worker-card {
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+
+  &:hover {
+    border-color: var(--color-border-hover);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  .card-header { display: flex; gap: 12px; }
+
+  .name-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .worker-name { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; }
+  .worker-trade { font-size: 0.8rem; color: var(--color-text-muted); font-weight: 600; }
+  .rating-row { display: flex; gap: 6px; font-size: 0.8rem; margin-top: 4px; }
+  .star-icon, .rating-num { font-weight: 700; }
+  .dot, .projects-count { color: var(--color-text-muted); }
+
+  .skills-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+  .skill-chip {
+    font-size: 0.7rem;
+    border: 1px solid var(--color-border);
+    padding: 2px 6px;
+    color: var(--color-text-muted);
+  }
+
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 8px 0;
+    border-top: 1px solid var(--color-border-subtle);
+    .meta-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-muted); }
+    .meta-val { font-weight: 700; display: block; }
+    .rate { font-family: var(--font-mono); color: var(--color-available); }
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--color-border-subtle);
+  }
+}

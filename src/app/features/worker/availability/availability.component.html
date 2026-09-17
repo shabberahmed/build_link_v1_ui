@@ -1,0 +1,19 @@
+<div class="worker-avail-page">
+  <div class="w-title">
+    <h2>{{ 'workerAvail.title' | t }}</h2>
+    <p>{{ 'workerAvail.sub' | t }}</p>
+  </div>
+
+  <app-card>
+    <div class="avail-box">
+      <span class="curr-lbl">{{ 'workerAvail.current' | t }}</span>
+      <h3 class="curr-val">{{ store.profile()?.status | locLabel:'workerStatus' }}</h3>
+
+      <div class="status-options">
+        <app-button variant="accent" (btnClick)="set('AVAILABLE')">{{ 'workerAvail.setAvailable' | t }}</app-button>
+        <app-button variant="secondary" (btnClick)="set('ON_LEAVE')">{{ 'workerAvail.setLeave' | t }}</app-button>
+        <app-button variant="outline" (btnClick)="set('DEPLOYED')">{{ 'workerAvail.setAssigned' | t }}</app-button>
+      </div>
+    </div>
+  </app-card>
+</div>

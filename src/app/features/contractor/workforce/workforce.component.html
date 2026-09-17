@@ -1,0 +1,187 @@
+<div class="workforce-page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">{{ 'people.title' | t }}</h1>
+      <p class="page-sub">{{ 'people.sub' | t: { count: workforceStore.totalWorkersCount() } }}</p>
+    </div>
+    <app-button variant="primary" size="md" (btnClick)="openAddModal()">
+      {{ 'people.addWorker' | t }}
+    </app-button>
+  </div>
+
+  <div class="filter-toolbar">
+    <div class="search-wrap">
+      <app-search-input
+        [placeholder]="'people.search' | t"
+        [value]="workforceStore.searchQuery()"
+        (valueChange)="onSearch($event)">
+      </app-search-input>
+    </div>
+
+    <div class="pills-scroll">
+      <span class="filter-label">{{ 'people.trade' | t }}</span>
+      @for (trade of tradesList; track trade) {
+        <button
+          [class]="'filter-pill' + (workforceStore.selectedTrade() === trade ? ' active' : '')"
+          (click)="selectTrade(trade)">
+          {{ trade | locLabel:'trade' }}
+        </button>
+      }
+    </div>
+
+    <div class="pills-scroll mt-2">
+      <span class="filter-label">{{ 'people.status' | t }}</span>
+      @for (st of statusList; track st) {
+        <button
+          [class]="'filter-pill' + (workforceStore.selectedStatus() === st ? ' active' : '')"
+          (click)="selectStatus(st)">
+          {{ st | locLabel:'workerStatus' }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="worker-grid">
+    @for (worker of workforceStore.filteredWorkers(); track worker.id) {
+      <app-worker-card
+        [worker]="worker"
+        (viewClick)="openWorkerDetail($event)"
+        (assignClick)="openAssign($event)">
+      </app-worker-card>
+    } @empty {
+      <div class="no-results">
+        <p>{{ 'people.noMatch' | t }}</p>
+        <app-button variant="outline" size="sm" (btnClick)="selectTrade('ALL'); selectStatus('ALL'); onSearch('')">{{ 'common.resetFilters' | t }}</app-button>
+      </div>
+    }
+  </div>
+
+  <app-modal [isOpen]="isAddModalOpen()" [title]="'people.register' | t" (closeModal)="closeAddModal()">
+    <form [formGroup]="addWorkerForm" (ngSubmit)="onAddWorkerSubmit()" class="add-form">
+      <div class="form-group">
+        <label class="form-label">{{ 'people.fullName' | t }}</label>
+        <input type="text" formControlName="name" class="form-input" [placeholder]="'people.namePlaceholder' | t" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">{{ 'people.tradeSpecialty' | t }}</label>
+          <select formControlName="trade" class="form-input">
+            @for (tr of tradesList; track tr) {
+              @if (tr !== 'ALL') {
+                <option [value]="tr">{{ tr | locLabel:'trade' }}</option>
+              }
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">{{ 'people.experienceYears' | t }}</label>
+          <input type="number" formControlName="experienceYears" class="form-input" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">{{ 'people.dailyWage' | t }}</label>
+          <input type="number" formControlName="dailyRate" class="form-input" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">{{ 'people.location' | t }}</label>
+          <input type="text" formControlName="location" class="form-input" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">{{ 'people.phone' | t }}</label>
+        <input type="text" formControlName="phone" class="form-input" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">{{ 'people.secondarySkills' | t }}</label>
+        <input type="text" formControlName="secondarySkills" class="form-input" />
+      </div>
+
+      <div class="form-actions">
+        <app-button type="button" variant="ghost" (btnClick)="closeAddModal()">{{ 'common.cancel' | t }}</app-button>
+        <app-button type="submit" variant="primary" [disabled]="addWorkerForm.invalid">{{ 'people.addWorkerBtn' | t }}</app-button>
+      </div>
+    </form>
+  </app-modal>
+
+  @if (selectedWorker(); as w) {
+    <app-modal [isOpen]="true" [title]="'people.profileTitle' | t: { name: w.name }" (closeModal)="closeWorkerDetail()">
+      <div class="worker-detail-view">
+        <div class="w-detail-header">
+          <img [src]="w.avatar" [alt]="w.name" class="w-avatar" />
+          <div class="w-header-info">
+            <h3 class="w-name">{{ w.name }}</h3>
+            <p class="w-trade">{{ w.trade | locLabel:'trade' }} • {{ 'people.yearsExperience' | t: { years: w.experienceYears } }}</p>
+            <div class="w-badges">
+              <app-badge variant="available">{{ w.status | locLabel:'workerStatus' }}</app-badge>
+              <span class="w-rating">★ {{ w.rating }} / 5.0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="w-stats-grid">
+          <div class="w-stat">
+            <span class="ws-label">{{ 'people.dailyWageLabel' | t }}</span>
+            <span class="ws-val">₹{{ w.dailyRate }}{{ 'common.perDay' | t }}</span>
+          </div>
+          <div class="w-stat">
+            <span class="ws-label">{{ 'people.attendanceRate' | t }}</span>
+            <span class="ws-val">{{ w.attendanceRate }}%</span>
+          </div>
+          <div class="w-stat">
+            <span class="ws-label">{{ 'people.projectsCompleted' | t }}</span>
+            <span class="ws-val">{{ w.completedProjectsCount }}</span>
+          </div>
+        </div>
+
+        <div class="w-section">
+          <h4>{{ 'people.bioTitle' | t }}</h4>
+          <p class="w-bio">{{ i18n.entity('worker', w.id, 'bio', w.bio) || ('people.bioFallback' | t) }}</p>
+        </div>
+
+        <div class="w-section">
+          <h4>{{ 'people.skillsTitle' | t }}</h4>
+          <div class="w-chips">
+            @for (sk of w.secondarySkills; track sk) {
+              <span class="w-chip">{{ i18n.skill(sk) }}</span>
+            }
+          </div>
+        </div>
+
+        <div class="w-section">
+          <h4>{{ 'people.contactTitle' | t }}</h4>
+          <p>📞 {{ w.phone }}</p>
+          <p>📍 {{ w.location }}</p>
+        </div>
+
+        @if (w.status === 'AVAILABLE') {
+          <div class="form-actions">
+            <app-button variant="primary" (btnClick)="openAssign(w)">{{ 'people.assignToProject' | t }}</app-button>
+          </div>
+        }
+      </div>
+    </app-modal>
+  }
+
+  @if (assigningWorker(); as aw) {
+    <app-modal [isOpen]="true" [title]="'people.assignTitle' | t: { name: aw.name }" (closeModal)="closeAssign()">
+      <div class="assign-list">
+        <p>{{ 'people.selectProject' | t }}</p>
+        @for (proj of projectStore.projects(); track proj.id) {
+          <button type="button" class="assign-row" (click)="confirmAssign(proj.id)">
+            <span class="ar-name">{{ i18n.entity('project', proj.id, 'name', proj.name) }}</span>
+            <span class="ar-meta">{{ 'people.workersMeta' | t: { deployed: proj.deployedWorkers, required: proj.requiredWorkers } }} • {{ proj.status | locLabel:'projectStatus' }}</span>
+          </button>
+        } @empty {
+          <p>{{ 'people.noProjects' | t }}</p>
+        }
+      </div>
+    </app-modal>
+  }
+</div>

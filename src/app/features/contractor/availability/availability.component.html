@@ -1,0 +1,61 @@
+<div class="availability-page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">{{ 'cal.title' | t }}</h1>
+      <p class="page-sub">{{ 'cal.sub' | t }}</p>
+    </div>
+
+    <div class="view-toggles">
+      <app-button [variant]="viewMode() === 'DAILY' ? 'primary' : 'outline'" size="sm" (btnClick)="setViewMode('DAILY')">{{ 'cal.daily' | t }}</app-button>
+      <app-button [variant]="viewMode() === 'WEEKLY' ? 'primary' : 'outline'" size="sm" (btnClick)="setViewMode('WEEKLY')">{{ 'cal.weekly' | t }}</app-button>
+      <app-button [variant]="viewMode() === 'MONTHLY' ? 'primary' : 'outline'" size="sm" (btnClick)="setViewMode('MONTHLY')">{{ 'cal.monthly' | t }}</app-button>
+    </div>
+  </div>
+
+  <div class="legend-bar">
+    <div class="legend-item"><span class="l-box l-deployed"></span> {{ 'cal.legendDeployed' | t }}</div>
+    <div class="legend-item"><span class="l-box l-available"></span> {{ 'cal.legendAvailable' | t }}</div>
+    <div class="legend-item"><span class="l-box l-leave"></span> {{ 'cal.legendLeave' | t }}</div>
+  </div>
+
+  <app-card>
+    <div class="timeline-scroll">
+    <div class="timeline-container">
+      <div class="timeline-header-row">
+        <div class="trade-col-header">{{ 'cal.tradeTeam' | t }}</div>
+        <div class="grid-cols-header" [style.grid-template-columns]="'repeat(' + headers().length + ', 1fr)'">
+          @for (h of headers(); track h) {
+            <span>{{ h }}</span>
+          }
+        </div>
+      </div>
+
+      @for (row of rows(); track row.trade) {
+        <div class="timeline-row">
+          <div class="trade-col">
+            <span class="t-name">{{ row.trade | locLabel:'trade' }} {{ 'cal.workersParen' | t: { count: row.total } }}</span>
+            <span class="t-sub">{{ row.sampleNames }} {{ 'common.andTeam' | t }}</span>
+          </div>
+          <div class="timeline-bars-cell">
+            @if (row.deployed) {
+              <div class="bar-segment bar-deployed" [style.width.%]="pct(row.deployed, row.total)">
+                {{ 'cal.deployed' | t: { count: row.deployed } }}
+              </div>
+            }
+            @if (row.available) {
+              <div class="bar-segment bar-available" [style.width.%]="pct(row.available, row.total)">
+                {{ 'cal.available' | t: { count: row.available } }}
+              </div>
+            }
+            @if (row.leave) {
+              <div class="bar-segment bar-leave" [style.width.%]="pct(row.leave, row.total)">
+                {{ 'cal.leave' | t: { count: row.leave } }}
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+    </div>
+  </app-card>
+</div>

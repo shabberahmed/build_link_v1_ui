@@ -1,0 +1,26 @@
+.worker-avail-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  .w-title {
+    h2 { font-size: 1.35rem; font-weight: 800; color: var(--color-primary); }
+    p { font-size: 0.8125rem; color: var(--color-text-muted); }
+  }
+
+  .avail-box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    .curr-lbl { font-size: 0.68rem; text-transform: uppercase; font-weight: 700; color: var(--color-text-muted); }
+    .curr-val { font-size: 1.5rem; font-weight: 800; color: var(--color-primary); }
+
+    .status-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+  }
+}

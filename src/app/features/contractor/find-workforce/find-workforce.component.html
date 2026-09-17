@@ -1,0 +1,207 @@
+<div class="find-page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">{{ 'market.title' | t }}</h1>
+      <p class="page-sub">{{ 'market.sub' | t }}</p>
+    </div>
+  </div>
+
+  <app-card>
+    <form [formGroup]="searchForm" class="search-panel">
+      <div class="form-row">
+        <div class="f-group">
+          <label class="f-label">{{ 'market.needTrade' | t }}</label>
+          <select formControlName="trade" class="f-input">
+            <option value="MASON">{{ 'enum.trade.MASON' | t }}</option>
+            <option value="ELECTRICIAN">{{ 'enum.trade.ELECTRICIAN' | t }}</option>
+            <option value="PLUMBER">{{ 'enum.trade.PLUMBER' | t }}</option>
+            <option value="SHUTTERING">{{ 'enum.trade.SHUTTERING' | t }}</option>
+            <option value="CARPENTER">{{ 'enum.trade.CARPENTER' | t }}</option>
+            <option value="WELDER">{{ 'enum.trade.WELDER' | t }}</option>
+            <option value="HELPER">{{ 'enum.trade.HELPER' | t }}</option>
+          </select>
+        </div>
+
+        <div class="f-group">
+          <label class="f-label">{{ 'market.location' | t }}</label>
+          <input type="text" formControlName="location" class="f-input" />
+        </div>
+
+        <div class="f-group">
+          <label class="f-label">{{ 'market.workerCount' | t }}</label>
+          <input type="number" formControlName="workerCount" class="f-input" />
+        </div>
+      </div>
+
+      <div class="form-row mt-2">
+        <div class="f-group">
+          <label class="f-label">{{ 'market.startDate' | t }}</label>
+          <input type="date" formControlName="startDate" class="f-input" />
+        </div>
+
+        <div class="f-group">
+          <label class="f-label">{{ 'market.duration' | t }}</label>
+          <input type="number" formControlName="durationDays" class="f-input" />
+        </div>
+
+        <div class="f-group">
+          <label class="f-label">{{ 'market.maxRate' | t }}</label>
+          <input type="number" formControlName="maxRate" class="f-input" />
+        </div>
+      </div>
+      <div class="search-actions">
+        <app-button type="button" variant="primary" (btnClick)="runSearch()">{{ 'market.search' | t }}</app-button>
+      </div>
+    </form>
+  </app-card>
+
+  <div class="results-header">
+    <h3 class="results-title">{{ 'market.matching' | t: { count: matches().length } }}</h3>
+    <span class="match-query">{{ 'market.criteria' | t: { count: searchForm.value.workerCount ?? 0, trade: (searchForm.value.trade | locLabel:'trade'), location: searchForm.value.location ?? '', date: searchForm.value.startDate ?? '' } }}</span>
+  </div>
+
+  <div class="matches-grid">
+    @for (match of matches(); track match.id) {
+      <div class="match-card">
+        <div class="m-header">
+          <div class="score-badge">{{ 'market.matchScore' | t: { score: match.matchScore } }}</div>
+          <app-avatar [src]="match.contractorAvatar" [name]="match.contractorName" size="md"></app-avatar>
+        </div>
+
+        <div class="m-content">
+          <h4 class="c-name">{{ match.contractorName }}</h4>
+          <p class="available-workers"><strong>{{ 'market.availableTrade' | t: { count: match.availableCount, trade: (match.trade | locLabel:'trade') } }}</strong></p>
+          <div class="rating-row">
+            <span class="star">★</span>
+            <span class="score">{{ match.rating }}</span>
+            <span class="dot">•</span>
+            <span>{{ 'market.yrsAvg' | t: { years: match.experienceAvg } }}</span>
+          </div>
+
+          <div class="details-box">
+            <div class="d-item">
+              <span class="d-label">{{ 'market.availableDate' | t }}</span>
+              <span class="d-val">{{ match.availableDate }}</span>
+            </div>
+            <div class="d-item">
+              <span class="d-label">{{ 'market.dailyWage' | t }}</span>
+              <span class="d-val rate">₹{{ match.dailyRate }}{{ 'common.perDay' | t }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="m-footer">
+          <app-button variant="outline" size="sm" (btnClick)="openWorkforce(match)">{{ 'market.viewWorkforce' | t }}</app-button>
+          <app-button variant="accent" size="sm" (btnClick)="openRequestModal(match)">{{ 'market.sendRequest' | t }}</app-button>
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (selectedMatchForReq(); as m) {
+    <app-modal [isOpen]="true" [title]="'market.sendTo' | t: { name: m.contractorName }" (closeModal)="closeRequestModal()">
+      <div class="req-preview-box">
+        <p>{{ 'market.requesting' | t: { count: searchForm.value.workerCount ?? 0, trade: (m.trade | locLabel:'trade'), days: searchForm.value.durationDays ?? 0, date: m.availableDate } }}</p>
+        <div class="preview-meta">
+          <span>{{ 'market.dailyRateLine' | t: { rate: m.dailyRate } }}</span>
+          <span>{{ 'market.estimated' | t: { total: m.dailyRate * (searchForm.value.workerCount ?? 0) * (searchForm.value.durationDays ?? 0) } }}</span>
+        </div>
+        <div class="modal-actions">
+          <app-button variant="ghost" (btnClick)="closeRequestModal()">{{ 'common.cancel' | t }}</app-button>
+          <app-button variant="primary" (btnClick)="sendQuickRequest()">{{ 'market.confirmSend' | t }}</app-button>
+        </div>
+      </div>
+    </app-modal>
+  }
+
+  @if (viewingMatch(); as vm) {
+    <app-modal [isOpen]="true" [title]="vm.contractorName + ' — ' + (vm.trade | locLabel:'trade')" (closeModal)="closeWorkforce()">
+      <div class="preview-workers">
+        @for (worker of viewingWorkers(); track worker.id) {
+          <app-worker-card
+            [worker]="worker"
+            (viewClick)="openWorkerDetail($event)"
+            (assignClick)="openAssign($event)">
+          </app-worker-card>
+        } @empty {
+          <p>{{ 'market.noWorkers' | t }}</p>
+        }
+      </div>
+    </app-modal>
+  }
+
+  @if (selectedWorker(); as w) {
+    <app-modal [isOpen]="true" [stacked]="true" [title]="'people.profileTitle' | t: { name: w.name }" (closeModal)="closeWorkerDetail()">
+      <div class="worker-detail-view">
+        <div class="w-detail-header">
+          <img [src]="w.avatar" [alt]="w.name" class="w-avatar" />
+          <div class="w-header-info">
+            <h3 class="w-name">{{ w.name }}</h3>
+            <p class="w-trade">{{ w.trade | locLabel:'trade' }} • {{ 'people.yearsExperience' | t: { years: w.experienceYears } }}</p>
+            <div class="w-badges">
+              <app-badge variant="available">{{ w.status | locLabel:'workerStatus' }}</app-badge>
+              <span class="w-rating">★ {{ w.rating }} / 5.0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="w-stats-grid">
+          <div class="w-stat">
+            <span class="ws-label">{{ 'people.dailyWageLabel' | t }}</span>
+            <span class="ws-val">₹{{ w.dailyRate }}{{ 'common.perDay' | t }}</span>
+          </div>
+          <div class="w-stat">
+            <span class="ws-label">{{ 'people.attendanceRate' | t }}</span>
+            <span class="ws-val">{{ w.attendanceRate }}%</span>
+          </div>
+          <div class="w-stat">
+            <span class="ws-label">{{ 'people.projectsCompleted' | t }}</span>
+            <span class="ws-val">{{ w.completedProjectsCount }}</span>
+          </div>
+        </div>
+
+        <div class="w-section">
+          <h4>{{ 'people.bioTitle' | t }}</h4>
+          <p>{{ i18n.entity('worker', w.id, 'bio', w.bio) || ('people.bioFallback' | t) }}</p>
+        </div>
+
+        <div class="w-section">
+          <h4>{{ 'people.skillsTitle' | t }}</h4>
+          <div class="w-chips">
+            @for (sk of w.secondarySkills; track sk) {
+              <span class="w-chip">{{ i18n.skill(sk) }}</span>
+            }
+          </div>
+        </div>
+
+        <div class="w-section">
+          <h4>{{ 'people.contactTitle' | t }}</h4>
+          <p>📞 {{ w.phone }}</p>
+          <p>📍 {{ w.location }}</p>
+        </div>
+
+        @if (w.status === 'AVAILABLE') {
+          <div class="modal-actions">
+            <app-button variant="primary" (btnClick)="openAssign(w)">{{ 'people.assignToProject' | t }}</app-button>
+          </div>
+        }
+      </div>
+    </app-modal>
+  }
+
+  @if (assigningWorker(); as aw) {
+    <app-modal [isOpen]="true" [stacked]="true" [title]="'people.assignTitle' | t: { name: aw.name }" (closeModal)="closeAssign()">
+      <div class="assign-list">
+        <p>{{ 'people.selectProject' | t }}</p>
+        @for (proj of projectStore.projects(); track proj.id) {
+          <button type="button" class="assign-row" (click)="confirmAssign(proj.id)">
+            <span class="ar-name">{{ i18n.entity('project', proj.id, 'name', proj.name) }}</span>
+            <span class="ar-meta">{{ 'people.workersMeta' | t: { deployed: proj.deployedWorkers, required: proj.requiredWorkers } }} • {{ proj.status | locLabel:'projectStatus' }}</span>
+          </button>
+        } @empty {
+          <p>{{ 'people.noProjects' | t }}</p>
+        }
+      </div>
+    </app-modal>
+  }
+</div>

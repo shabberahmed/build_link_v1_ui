@@ -1,0 +1,91 @@
+<div class="crews-page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">{{ 'crews.title' | t }}</h1>
+      <p class="page-sub">{{ 'crews.sub' | t }}</p>
+    </div>
+    <app-button variant="primary" size="md" (btnClick)="openAssemble()">
+      {{ 'crews.assemble' | t }}
+    </app-button>
+  </div>
+
+  @if (workforceStore.crewRequestSuccess(); as reqId) {
+    <div class="success-banner">
+      {{ 'crews.requestOk' | t: { id: reqId } }}
+      <app-button variant="ghost" size="sm" (btnClick)="dismissSuccess()">{{ 'crews.dismiss' | t }}</app-button>
+    </div>
+  }
+
+  <div class="crews-grid">
+    @for (crew of workforceStore.crews(); track crew.id) {
+      <app-crew-card [crew]="crew" (requestCrewClick)="openRequest($event)"></app-crew-card>
+    }
+  </div>
+
+  <app-modal [isOpen]="isAssembleOpen()" [title]="'crews.assemble' | t" (closeModal)="closeAssemble()">
+    <form [formGroup]="assembleForm" (ngSubmit)="submitAssemble()" class="add-form">
+      <div class="form-group">
+        <label class="form-label">{{ 'crews.crewName' | t }}</label>
+        <input type="text" formControlName="name" class="form-input" [placeholder]="'crews.crewNamePh' | t" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">{{ 'crews.location' | t }}</label>
+          <input type="text" formControlName="location" class="form-input" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">{{ 'crews.dailyRate' | t }}</label>
+          <input type="number" formControlName="dailyRatePerWorker" class="form-input" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">{{ 'crews.availableFrom' | t }}</label>
+          <input type="date" formControlName="availableFrom" class="form-input" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">{{ 'crews.supervisor' | t }}</label>
+          <input type="text" formControlName="supervisorName" class="form-input" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">{{ 'crews.composition' | t }}</label>
+        <input type="text" formControlName="compositionNotes" class="form-input" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">{{ 'crews.memberIds' | t }}</label>
+        <input type="text" formControlName="memberIds" class="form-input" placeholder="w-101, w-103" />
+      </div>
+      <div class="form-actions">
+        <app-button type="button" variant="ghost" (btnClick)="closeAssemble()">{{ 'common.cancel' | t }}</app-button>
+        <app-button type="submit" variant="primary" [disabled]="assembleForm.invalid">{{ 'crews.createCrew' | t }}</app-button>
+      </div>
+    </form>
+  </app-modal>
+
+  @if (requestingCrew(); as crew) {
+    <app-modal [isOpen]="true" [title]="'crews.requestTitle' | t: { name: i18n.entity('crew', crew.id, 'name', crew.name) }" (closeModal)="closeRequest()">
+      <form [formGroup]="requestForm" (ngSubmit)="submitRequest()" class="add-form">
+        <p class="modal-lead">{{ 'crews.crewLead' | t: { count: crew.totalWorkers, rate: crew.dailyRatePerWorker, location: crew.location } }}</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">{{ 'crews.startDate' | t }}</label>
+            <input type="date" formControlName="startDate" class="form-input" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">{{ 'crews.duration' | t }}</label>
+            <input type="number" formControlName="durationDays" class="form-input" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">{{ 'crews.notes' | t }}</label>
+          <textarea formControlName="notes" class="form-input" rows="3"></textarea>
+        </div>
+        <div class="form-actions">
+          <app-button type="button" variant="ghost" (btnClick)="closeRequest()">{{ 'common.cancel' | t }}</app-button>
+          <app-button type="submit" variant="accent" [disabled]="requestForm.invalid">{{ 'crews.sendRequest' | t }}</app-button>
+        </div>
+      </form>
+    </app-modal>
+  }
+</div>

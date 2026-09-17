@@ -1,0 +1,181 @@
+<div class="requests-page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">{{ 'orders.title' | t }}</h1>
+      <p class="page-sub">{{ 'orders.sub' | t }}</p>
+    </div>
+
+    <div class="tab-toggles">
+      <button [class]="'tab-btn' + (activeTab() === 'INBOUND' ? ' active' : '')" (click)="activeTab.set('INBOUND')">
+        {{ 'orders.inbound' | t: { count: store.pendingRequestsCount() } }}
+      </button>
+      <button [class]="'tab-btn' + (activeTab() === 'CREATE' ? ' active' : '')" (click)="activeTab.set('CREATE')">
+        {{ 'orders.createWizard' | t }}
+      </button>
+    </div>
+  </div>
+
+  @if (activeTab() === 'INBOUND') {
+    <div class="inbound-list">
+      @for (req of store.requests(); track req.id) {
+        <app-card>
+          <div class="req-card-inner">
+            <div class="req-top">
+              <div>
+                <h4 class="req-title">{{ 'orders.tradeCount' | t: { count: req.workerCount, trade: (req.trade | locLabel:'trade') } }}</h4>
+                <p class="req-from">{{ 'orders.requester' | t }} <strong>{{ req.requesterContractorName }}</strong></p>
+              </div>
+              <app-badge [variant]="req.status === 'PENDING' ? 'coming-soon' : req.status === 'ACCEPTED' ? 'available' : 'unavailable'">
+                {{ req.status | locLabel:'requestStatus' }}
+              </app-badge>
+            </div>
+
+            <div class="req-details-grid">
+              <div class="d-cell">
+                <span class="lbl">{{ 'orders.location' | t }}</span>
+                <span class="val">📍 {{ req.location }}</span>
+              </div>
+              <div class="d-cell">
+                <span class="lbl">{{ 'orders.durationDates' | t }}</span>
+                <span class="val">{{ 'orders.dateRange' | t: { start: req.startDate, end: req.endDate, days: req.durationDays } }}</span>
+              </div>
+              <div class="d-cell">
+                <span class="lbl">{{ 'orders.offeredWage' | t }}</span>
+                <span class="val rate">₹{{ req.dailyRate }}{{ 'common.perDay' | t }}</span>
+              </div>
+              <div class="d-cell">
+                <span class="lbl">{{ 'orders.logistics' | t }}</span>
+                <span class="val">
+                  {{ req.accommodationProvided ? ('orders.accommodation' | t) : '' }}
+                  {{ req.transportProvided ? ('orders.transport' | t) : '' }}
+                </span>
+              </div>
+            </div>
+
+            @if (req.notes) {
+              <div class="req-notes">
+                <strong>{{ 'orders.notes' | t }}</strong> {{ i18n.entity('request', req.id, 'notes', req.notes) }}
+              </div>
+            }
+
+            @if (req.status === 'PENDING') {
+              <div class="req-actions-bar">
+                <app-button variant="danger" size="sm" (btnClick)="rejectRequest(req.id)">{{ 'orders.decline' | t }}</app-button>
+                <app-button variant="accent" size="sm" (btnClick)="acceptRequest(req.id)">{{ 'orders.accept' | t }}</app-button>
+              </div>
+            }
+          </div>
+        </app-card>
+      }
+    </div>
+  } @else {
+    <app-card>
+      <div class="stepper-box">
+        <app-stepper [steps]="stepsList()" [activeStep]="currentStep()"></app-stepper>
+
+        <form [formGroup]="wizardForm" class="wizard-form">
+          @if (currentStep() === 1) {
+            <div class="step-pane">
+              <h3 class="pane-title">{{ 'orders.step1' | t }}</h3>
+              <div class="form-group">
+                <label class="form-label">{{ 'orders.tradeCat' | t }}</label>
+                <select formControlName="trade" class="form-input">
+                  <option value="MASON">{{ 'orders.tradeMasonry' | t }}</option>
+                  <option value="ELECTRICIAN">{{ 'orders.tradeElectrical' | t }}</option>
+                  <option value="PLUMBER">{{ 'orders.tradePlumbing' | t }}</option>
+                  <option value="SHUTTERING">{{ 'orders.tradeFormwork' | t }}</option>
+                  <option value="CARPENTER">{{ 'orders.tradeCarpentry' | t }}</option>
+                  <option value="WELDER">{{ 'orders.tradeWelding' | t }}</option>
+                  <option value="HELPER">{{ 'orders.tradeHelper' | t }}</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">{{ 'orders.workersRequired' | t }}</label>
+                <input type="number" formControlName="workerCount" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">{{ 'orders.siteLocation' | t }}</label>
+                <input type="text" formControlName="location" class="form-input" />
+              </div>
+            </div>
+          }
+
+          @if (currentStep() === 2) {
+            <div class="step-pane">
+              <h3 class="pane-title">{{ 'orders.step2' | t }}</h3>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">{{ 'orders.startDate' | t }}</label>
+                  <input type="date" formControlName="startDate" class="form-input" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">{{ 'orders.endDate' | t }}</label>
+                  <input type="date" formControlName="endDate" class="form-input" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">{{ 'orders.dailyOffered' | t }}</label>
+                <input type="number" formControlName="dailyRate" class="form-input" />
+              </div>
+            </div>
+          }
+
+          @if (currentStep() === 3) {
+            <div class="step-pane">
+              <h3 class="pane-title">{{ 'orders.step3' | t }}</h3>
+              <div class="form-group checkbox-group">
+                <label>
+                  <input type="checkbox" formControlName="accommodationProvided" />
+                  {{ 'orders.accProvided' | t }}
+                </label>
+              </div>
+              <div class="form-group checkbox-group">
+                <label>
+                  <input type="checkbox" formControlName="transportProvided" />
+                  {{ 'orders.transProvided' | t }}
+                </label>
+              </div>
+              <div class="form-group">
+                <label class="form-label">{{ 'orders.shiftType' | t }}</label>
+                <select formControlName="shiftType" class="form-input">
+                  <option value="DAY">{{ 'orders.shiftDay' | t }}</option>
+                  <option value="NIGHT">{{ 'orders.shiftNight' | t }}</option>
+                  <option value="ROTATING">{{ 'orders.shiftRotating' | t }}</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">{{ 'orders.extraNotes' | t }}</label>
+                <textarea formControlName="notes" class="form-input" rows="3"></textarea>
+              </div>
+            </div>
+          }
+
+          @if (currentStep() === 4) {
+            <div class="step-pane">
+              <h3 class="pane-title">{{ 'orders.step4' | t }}</h3>
+              <div class="review-box">
+                <div class="r-row"><span>{{ 'orders.trade' | t }}</span> <strong>{{ wizardForm.value.trade | locLabel:'trade' }}</strong></div>
+                <div class="r-row"><span>{{ 'orders.workersCount' | t }}</span> <strong>{{ 'orders.workersN' | t: { count: wizardForm.value.workerCount ?? 0 } }}</strong></div>
+                <div class="r-row"><span>{{ 'orders.locationReview' | t }}</span> <strong>{{ wizardForm.value.location }}</strong></div>
+                <div class="r-row"><span>{{ 'orders.dates' | t }}</span> <strong>{{ 'orders.datesTo' | t: { start: wizardForm.value.startDate ?? '', end: wizardForm.value.endDate ?? '' } }}</strong></div>
+                <div class="r-row"><span>{{ 'orders.rate' | t }}</span> <strong>₹{{ wizardForm.value.dailyRate }}{{ 'common.perWorkerDay' | t }}</strong></div>
+                <div class="r-row"><span>{{ 'orders.logisticsReview' | t }}</span> <strong>{{ 'orders.accLine' | t: { acc: wizardForm.value.accommodationProvided ? ('common.yes' | t) : ('common.no' | t), trans: wizardForm.value.transportProvided ? ('common.yes' | t) : ('common.no' | t) } }}</strong></div>
+              </div>
+            </div>
+          }
+
+          <div class="wizard-nav">
+            @if (currentStep() > 1) {
+              <app-button type="button" variant="outline" (btnClick)="prevStep()">{{ 'orders.previous' | t }}</app-button>
+            }
+            @if (currentStep() < 4) {
+              <app-button type="button" variant="primary" (btnClick)="nextStep()">{{ 'orders.continue' | t }}</app-button>
+            } @else {
+              <app-button type="button" variant="accent" (btnClick)="submitWizard()">{{ 'orders.submitOrder' | t }}</app-button>
+            }
+          </div>
+        </form>
+      </div>
+    </app-card>
+  }
+</div>

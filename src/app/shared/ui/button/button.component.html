@@ -1,0 +1,7 @@
+<button
+  [type]="type()"
+  [disabled]="disabled()"
+  [class]="'btn btn-' + variant() + ' btn-' + size() + (inverted() ? ' btn-inverted' : '')"
+  (click)="onClick($event)">
+  <ng-content></ng-content>
+</button>

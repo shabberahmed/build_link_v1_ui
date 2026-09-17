@@ -1,0 +1,38 @@
+<div class="worker-shell">
+  <header class="w-header">
+    <div class="w-brand">
+      <span class="mark">BL</span>
+      <span class="w-logo">{{ 'brand.fieldBook' | t }}</span>
+    </div>
+    <div class="w-actions">
+      <app-language-switcher [inverted]="true"></app-language-switcher>
+      <app-button variant="ghost" size="sm" [inverted]="true" (btnClick)="switchToContractorRole()">{{ 'nav.desk' | t }}</app-button>
+      <app-button variant="outline" size="sm" [inverted]="true" (btnClick)="logout()">{{ 'nav.out' | t }}</app-button>
+    </div>
+  </header>
+
+  <main class="w-main">
+    <router-outlet></router-outlet>
+  </main>
+
+  <nav class="bottom-nav" [attr.aria-label]="'nav.fieldNav' | t">
+    <a routerLink="/worker/dashboard" routerLinkActive="active" class="b-item">
+      <span class="b-text">{{ 'nav.today' | t }}</span>
+    </a>
+    <a routerLink="/worker/jobs" routerLinkActive="active" class="b-item">
+      <span class="b-text">{{ 'nav.jobs' | t }}</span>
+    </a>
+    <a routerLink="/worker/availability" routerLinkActive="active" class="b-item">
+      <span class="b-text">{{ 'nav.status' | t }}</span>
+    </a>
+    <a routerLink="/worker/attendance" routerLinkActive="active" class="b-item">
+      <span class="b-text">{{ 'nav.days' | t }}</span>
+    </a>
+    <a routerLink="/worker/earnings" routerLinkActive="active" class="b-item">
+      <span class="b-text">{{ 'nav.pay' | t }}</span>
+    </a>
+    <a routerLink="/worker/profile" routerLinkActive="active" class="b-item">
+      <span class="b-text">{{ 'nav.me' | t }}</span>
+    </a>
+  </nav>
+</div>

@@ -1,0 +1,105 @@
+<div class="login-page">
+  <div class="login-lang">
+    <app-language-switcher></app-language-switcher>
+  </div>
+  <div class="login-stage">
+    <section class="gatehouse">
+      <p class="kicker">{{ 'login.kicker' | t }}</p>
+      <h1>{{ 'login.title' | t }}</h1>
+      <p class="lede">{{ 'login.lede' | t }}</p>
+      <dl class="facts">
+        <div><dt>{{ 'login.workersVerified' | t }}</dt><dd>10,000+</dd></div>
+        <div><dt>{{ 'login.contractors' | t }}</dt><dd>850+</dd></div>
+        <div><dt>{{ 'login.wagesSettled' | t }}</dt><dd>₹12 Cr+</dd></div>
+      </dl>
+    </section>
+
+    <main class="kiosk" id="login-main">
+      <div class="kiosk-head">
+        <span class="mark">BL</span>
+        <div>
+          <strong>{{ 'brand.siteGate' | t }}</strong>
+          <span>{{ 'login.signInDemo' | t }}</span>
+        </div>
+      </div>
+
+      <div class="role-switcher" role="group" [attr.aria-label]="'login.selectRole' | t">
+        <button
+          id="btn-role-contractor"
+          type="button"
+          [class]="'role-btn' + (selectedRole() === 'CONTRACTOR' ? ' active' : '')"
+          (click)="selectRole('CONTRACTOR')"
+          [attr.aria-pressed]="selectedRole() === 'CONTRACTOR'">
+          {{ 'login.contractorDesk' | t }}
+        </button>
+        <button
+          id="btn-role-worker"
+          type="button"
+          [class]="'role-btn' + (selectedRole() === 'WORKER' ? ' active' : '')"
+          (click)="selectRole('WORKER')"
+          [attr.aria-pressed]="selectedRole() === 'WORKER'">
+          {{ 'login.fieldWorker' | t }}
+        </button>
+      </div>
+
+      <div class="permit">
+        <span class="permit-name">{{ activeProfile.name }}</span>
+        <span class="permit-tag">{{ selectedRole() === 'WORKER' ? ('login.workerTag' | t) : activeProfile.tag }}</span>
+        <p>{{ selectedRole() === 'CONTRACTOR' ? ('login.contractorDesc' | t) : ('login.workerDesc' | t) }}</p>
+      </div>
+
+      <form class="login-form" (ngSubmit)="onLogin()" id="login-form">
+        <label class="field-label" for="email-input">{{ 'login.email' | t }}</label>
+        <input
+          id="email-input"
+          type="email"
+          class="field-input"
+          [ngModel]="email()"
+          (ngModelChange)="email.set($event)"
+          name="email"
+          autocomplete="email"
+          required />
+
+        <label class="field-label" for="password-input">{{ 'login.password' | t }}</label>
+        <input
+          id="password-input"
+          type="password"
+          class="field-input"
+          [ngModel]="password()"
+          (ngModelChange)="password.set($event)"
+          name="password"
+          autocomplete="current-password"
+          required />
+        <span class="demo-hint">{{ 'login.demoPassword' | t }} <strong>demo1234</strong></span>
+
+        @if (errorMsg()) {
+          <div class="error-banner" role="alert">{{ errorMsg() }}</div>
+        }
+
+        <button type="submit" id="login-submit-btn" class="submit-btn" [disabled]="isLoading()">
+          {{ submitLabel() }}
+        </button>
+      </form>
+
+      <p class="card-footer">
+        {{ 'login.noDesk' | t }}
+        <a href="#" class="footer-link" (click)="$event.preventDefault(); openEarlyAccess()">{{ 'login.requestPass' | t }}</a>
+      </p>
+    </main>
+  </div>
+</div>
+
+<app-modal [isOpen]="isAccessOpen()" [title]="'login.requestPass' | t" (closeModal)="closeEarlyAccess()">
+  @if (accessSubmitted()) {
+    <p>{{ 'login.thanksAccess' | t: { name: accessName(), email: accessEmail() } }}</p>
+    <app-button variant="primary" (btnClick)="closeEarlyAccess()">{{ 'common.done' | t }}</app-button>
+  } @else {
+    <div class="access-form">
+      <label>{{ 'login.fullName' | t }}</label>
+      <input type="text" [ngModel]="accessName()" (ngModelChange)="accessName.set($event)" [placeholder]="'login.yourName' | t" />
+      <label>{{ 'login.workEmail' | t }}</label>
+      <input type="email" [ngModel]="accessEmail()" (ngModelChange)="accessEmail.set($event)" placeholder="you@company.com" />
+      <app-button variant="primary" (btnClick)="submitEarlyAccess()">{{ 'login.submitRequest' | t }}</app-button>
+    </div>
+  }
+</app-modal>

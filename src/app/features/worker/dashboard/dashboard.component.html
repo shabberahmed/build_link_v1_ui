@@ -1,0 +1,65 @@
+<div class="worker-dash-page">
+  @if (store.loading()) {
+    <div class="page-loader">
+      <app-loader [compact]="true" messageKey="loader.fetching"></app-loader>
+      <p class="page-sub">{{ 'loader.fetching' | t }}</p>
+    </div>
+  }
+  <p class="kicker">{{ 'workerDash.kicker' | t }}</p>
+  <h2>{{ store.profile()?.name || 'Ravi' }}</h2>
+  <p class="role">{{ store.profile()?.trade | locLabel:'trade' }} · {{ store.profile()?.contractorName }}</p>
+
+  <section class="punch">
+    <div class="p-head">
+      <h3>{{ 'workerDash.timeClock' | t }}</h3>
+      <app-badge variant="available">{{ 'workerDash.open' | t }}</app-badge>
+    </div>
+    <p class="p-site">{{ i18n.entity('project', store.profile()?.currentProjectId ?? '', 'name', store.profile()?.currentProjectName) || ('workerDash.noSite' | t) }}</p>
+    <div class="punch-buttons">
+      <app-button variant="accent" (btnClick)="punch('PRESENT')">{{ 'workerDash.markPresent' | t }}</app-button>
+      <app-button variant="outline" (btnClick)="punch('OVERTIME')">{{ 'workerDash.overtime' | t }}</app-button>
+    </div>
+  </section>
+
+  <section class="pass">
+    <span class="a-label">{{ 'workerDash.workPass' | t }}</span>
+    <h3>{{ i18n.entity('project', store.profile()?.currentProjectId ?? '', 'name', store.profile()?.currentProjectName) || ('workerDash.openAssign' | t) }}</h3>
+    <div class="a-meta-grid">
+      <div><span class="lbl">{{ 'workerDash.trade' | t }}</span><span class="val">{{ store.profile()?.trade | locLabel:'trade' }}</span></div>
+      <div><span class="lbl">{{ 'workerDash.rate' | t }}</span><span class="val rate">₹{{ store.profile()?.dailyRate }}{{ 'common.perDay' | t }}</span></div>
+      <div><span class="lbl">{{ 'workerDash.status' | t }}</span><span class="val">{{ store.profile()?.status | locLabel:'workerStatus' }}</span></div>
+      <div><span class="lbl">{{ 'workerDash.attendance' | t }}</span><span class="val">{{ store.profile()?.attendanceRate }}%</span></div>
+    </div>
+  </section>
+
+  <div class="earnings-banner">
+    <div>
+      <span class="eb-lbl">{{ 'workerDash.daysMonth' | t }}</span>
+      <span class="eb-val">{{ store.daysWorkedMonth() }}</span>
+    </div>
+    <div>
+      <span class="eb-lbl">{{ 'workerDash.wagesPosted' | t }}</span>
+      <span class="eb-val rate">₹{{ store.totalEarningsMonth().toLocaleString('en-IN') }}</span>
+    </div>
+  </div>
+
+  <div class="opps-header">
+    <h3>{{ 'workerDash.openJobs' | t }}</h3>
+    <a routerLink="/worker/jobs">{{ 'workerDash.allJobs' | t }}</a>
+  </div>
+  @for (job of store.jobs(); track job.id) {
+    <article class="job-item">
+      <div class="j-top">
+        <span>{{ job.workerCount }} {{ job.trade | locLabel:'trade' }}</span>
+        <span class="j-rate">₹{{ job.dailyRate }}{{ 'dash.perD' | t }}</span>
+      </div>
+      <p>{{ job.requesterContractorName }} · {{ job.location }}</p>
+      <p class="j-dates">{{ job.startDate }} · {{ job.durationDays }} {{ 'common.days' | t }}</p>
+      @if (store.hasApplied(job.id)) {
+        <app-badge variant="available">{{ 'workerDash.applied' | t }}</app-badge>
+      } @else {
+        <app-button variant="accent" size="sm" (btnClick)="apply(job.id)">{{ 'workerDash.apply' | t }}</app-button>
+      }
+    </article>
+  }
+</div>

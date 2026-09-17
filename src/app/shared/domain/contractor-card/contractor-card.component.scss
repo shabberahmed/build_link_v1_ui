@@ -1,0 +1,116 @@
+.contractor-card {
+  background-color: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .c-header {
+    display: flex;
+    gap: 1rem;
+
+    .c-title-box {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+
+      .title-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        .company-name {
+          font-size: 1.05rem;
+          font-weight: 700;
+          color: var(--color-text-main);
+        }
+
+        .verified-badge {
+          background-color: #dcfce7;
+          color: #15803d;
+          font-size: 0.72rem;
+          font-weight: 700;
+          padding: 0.15rem 0.45rem;
+          border-radius: var(--radius-full);
+        }
+      }
+
+      .contact-person {
+        font-size: 0.8125rem;
+        color: var(--color-text-muted);
+      }
+
+      .rating-bar {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.8125rem;
+        margin-top: 0.25rem;
+
+        .star { color: var(--color-accent); font-weight: 700; }
+        .rating-num { font-weight: 700; }
+        .dot { color: var(--color-text-light); }
+        .trust { font-weight: 600; color: var(--color-teal); }
+      }
+    }
+  }
+
+  .c-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    .specs-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+
+      .spec-chip {
+        font-size: 0.72rem;
+        background-color: var(--color-bg-app);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-xs);
+        padding: 0.15rem 0.45rem;
+        color: var(--color-text-muted);
+        font-weight: 500;
+      }
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.5rem;
+      background-color: var(--color-bg-app);
+      padding: 0.6rem 0.75rem;
+      border-radius: var(--radius-md);
+
+      .s-item {
+        display: flex;
+        flex-direction: column;
+
+        .s-label {
+          font-size: 0.68rem;
+          color: var(--color-text-muted);
+          text-transform: uppercase;
+          font-weight: 600;
+        }
+
+        .s-val {
+          font-size: 0.8125rem;
+          font-weight: 700;
+          color: var(--color-text-main);
+        }
+      }
+    }
+  }
+
+  .c-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-border-subtle);
+  }
+}

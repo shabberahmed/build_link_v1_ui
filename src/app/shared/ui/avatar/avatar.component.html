@@ -1,0 +1,7 @@
+<div [class]="'avatar-wrapper avatar-' + size() + (round() ? ' round' : '')">
+  @if (src() && !broken()) {
+    <img [src]="src()" [alt]="name()" class="avatar-img" (error)="broken.set(true)" />
+  } @else {
+    <div class="avatar-fallback">{{ initials }}</div>
+  }
+</div>

@@ -1,0 +1,99 @@
+<div class="payments-page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">{{ 'ledger.title' | t }}</h1>
+      <p class="page-sub">{{ 'ledger.sub' | t }}</p>
+    </div>
+    <app-button variant="primary" size="md" (btnClick)="openPayout()">{{ 'ledger.initiate' | t }}</app-button>
+  </div>
+
+  <app-card>
+    <div class="table-wrap">
+    <table class="payments-table">
+      <thead>
+        <tr>
+          <th>{{ 'ledger.recipient' | t }}</th>
+          <th>{{ 'ledger.type' | t }}</th>
+          <th>{{ 'ledger.period' | t }}</th>
+          <th>{{ 'ledger.reference' | t }}</th>
+          <th>{{ 'ledger.date' | t }}</th>
+          <th>{{ 'ledger.amount' | t }}</th>
+          <th>{{ 'ledger.status' | t }}</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (pay of paymentStore.payments(); track pay.id) {
+          <tr>
+            <td>
+              <span class="r-name">{{ pay.recipientName }}</span>
+              <span class="r-role">{{ pay.role | locLabel:'payRole' }}</span>
+            </td>
+            <td><span class="type-pill">{{ pay.type | locLabel:'payType' }}</span></td>
+            <td>{{ i18n.entity('payment', pay.id, 'period', pay.periodDescription) }}</td>
+            <td class="ref-num">{{ pay.referenceNumber }}</td>
+            <td>{{ pay.date }}</td>
+            <td class="amount-cell">₹{{ pay.amount.toLocaleString('en-IN') }}</td>
+            <td>
+              <app-badge [variant]="pay.status === 'PAID' ? 'available' : 'on-leave'">
+                {{ pay.status | locLabel:'payStatus' }}
+              </app-badge>
+            </td>
+            <td>
+              @if (pay.status !== 'PAID') {
+                <app-button variant="outline" size="sm" (btnClick)="completePayout(pay.id)">{{ 'ledger.markPaid' | t }}</app-button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    </div>
+  </app-card>
+
+  <app-modal [isOpen]="isPayoutOpen()" [title]="'ledger.initiate' | t" (closeModal)="closePayout()">
+    <form [formGroup]="payoutForm" (ngSubmit)="submitPayout()" class="add-form">
+      <div class="form-group">
+        <label class="form-label">{{ 'ledger.recipientStar' | t }}</label>
+        <input type="text" formControlName="recipientName" class="form-input" list="payout-recipients" />
+        <datalist id="payout-recipients">
+          @for (w of workforceStore.workers(); track w.id) {
+            <option [value]="w.name"></option>
+          }
+          @for (c of networkStore.contractors(); track c.id) {
+            <option [value]="c.companyName"></option>
+          }
+        </datalist>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">{{ 'ledger.role' | t }}</label>
+          <select formControlName="role" class="form-input">
+            <option value="WORKER">{{ 'enum.payRole.WORKER' | t }}</option>
+            <option value="CONTRACTOR">{{ 'enum.payRole.CONTRACTOR' | t }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">{{ 'ledger.type' | t }}</label>
+          <select formControlName="type" class="form-input">
+            <option value="WAGE_PAYOUT">{{ 'enum.payType.WAGE_PAYOUT' | t }}</option>
+            <option value="CONTRACTOR_SETTLEMENT">{{ 'enum.payType.CONTRACTOR_SETTLEMENT' | t }}</option>
+            <option value="ADVANCE">{{ 'enum.payType.ADVANCE' | t }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">{{ 'ledger.amountStar' | t }}</label>
+        <input type="number" formControlName="amount" class="form-input" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">{{ 'ledger.periodStar' | t }}</label>
+        <input type="text" formControlName="periodDescription" class="form-input" />
+      </div>
+      <div class="form-actions">
+        <app-button type="button" variant="ghost" (btnClick)="closePayout()">{{ 'common.cancel' | t }}</app-button>
+        <app-button type="submit" variant="primary" [disabled]="payoutForm.invalid">{{ 'ledger.submit' | t }}</app-button>
+      </div>
+    </form>
+  </app-modal>
+</div>

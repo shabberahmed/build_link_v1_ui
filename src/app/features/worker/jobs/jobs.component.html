@@ -1,0 +1,38 @@
+<div class="worker-jobs-page">
+  <div class="w-title">
+    <h2>{{ 'workerJobs.title' | t }}</h2>
+    <p>{{ 'workerJobs.sub' | t }}</p>
+  </div>
+
+  @if (store.applyMessage(); as msg) {
+    <div class="apply-banner">{{ msg }}</div>
+  }
+
+  <div class="jobs-list">
+    @for (job of store.jobs(); track job.id) {
+      <app-card>
+        <div class="job-card-inner">
+          <div class="j-header">
+            <span class="j-trade">{{ 'workerJobs.workersParen' | t: { trade: (job.trade | locLabel:'trade'), count: job.workerCount } }}</span>
+            <app-badge variant="available">{{ 'workerDash.open' | t }}</app-badge>
+          </div>
+          <p class="j-contractor">{{ 'workerJobs.contractor' | t: { name: job.requesterContractorName } }}</p>
+
+          <div class="j-details">
+            <div>📍 {{ job.location }}</div>
+            <div>📅 {{ 'workerJobs.starts' | t: { date: job.startDate, days: job.durationDays } }}</div>
+            <div class="rate">💰 ₹{{ job.dailyRate }}{{ 'common.perDay' | t }}</div>
+          </div>
+
+          <div class="j-actions">
+            @if (store.hasApplied(job.id)) {
+              <app-badge variant="available">{{ 'workerDash.applied' | t }}</app-badge>
+            } @else {
+              <app-button variant="accent" size="sm" (btnClick)="apply(job.id)">{{ 'workerJobs.applyAccept' | t }}</app-button>
+            }
+          </div>
+        </div>
+      </app-card>
+    }
+  </div>
+</div>

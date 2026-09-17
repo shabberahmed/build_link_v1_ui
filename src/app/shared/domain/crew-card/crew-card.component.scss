@@ -1,0 +1,110 @@
+.crew-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .crew-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    .crew-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--color-text-main);
+    }
+    .contractor-name {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+  }
+
+  .crew-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+
+      .stat-pill {
+        background-color: var(--color-bg-app);
+        padding: 0.5rem 0.75rem;
+        border-radius: var(--radius-md);
+        display: flex;
+        flex-direction: column;
+
+        .pill-label {
+          font-size: 0.7rem;
+          color: var(--color-text-muted);
+          text-transform: uppercase;
+          font-weight: 600;
+        }
+        .pill-val {
+          font-size: 0.9375rem;
+          font-weight: 700;
+          color: var(--color-text-main);
+        }
+      }
+    }
+
+    .breakdown-box {
+      border: 1px solid var(--color-border-subtle);
+      border-radius: var(--radius-md);
+      padding: 0.6rem 0.75rem;
+
+      .box-title {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: var(--color-text-muted);
+        display: block;
+        margin-bottom: 0.35rem;
+      }
+
+      .comp-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+
+        .comp-item {
+          font-size: 0.8125rem;
+          background-color: var(--color-surface-hover);
+          padding: 0.2rem 0.5rem;
+          border-radius: var(--radius-xs);
+          display: flex;
+          gap: 0.35rem;
+
+          .trade { font-weight: 600; }
+          .count { font-weight: 700; color: var(--color-primary); }
+        }
+      }
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+
+      .rate {
+        font-weight: 700;
+        color: #047857;
+      }
+    }
+  }
+
+  .crew-footer {
+    display: flex;
+    justify-content: flex-end;
+    border-top: 1px solid var(--color-border-subtle);
+    padding-top: 0.75rem;
+  }
+}

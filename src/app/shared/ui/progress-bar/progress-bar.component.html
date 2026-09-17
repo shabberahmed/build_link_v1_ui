@@ -1,0 +1,11 @@
+<div class="progress-container">
+  @if (showLabel()) {
+    <div class="progress-label">
+      <span>Progress</span>
+      <span>{{ value() }}%</span>
+    </div>
+  }
+  <div class="progress-track" [style.height]="height()">
+    <div [class]="'progress-fill fill-' + color()" [style.width.%]="value()"></div>
+  </div>
+</div>

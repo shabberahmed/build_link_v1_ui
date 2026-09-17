@@ -1,0 +1,55 @@
+.worker-earn-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  .w-title {
+    h2 { font-size: 1.35rem; font-weight: 800; color: var(--color-primary); }
+    p { font-size: 0.8125rem; color: var(--color-text-muted); }
+  }
+
+  .earn-card-hero {
+    background-color: var(--color-primary);
+    color: var(--color-text-inverse);
+    padding: 1.25rem;
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+
+    .lbl { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: #94a3b8; }
+    .amount { font-size: 2.25rem; font-weight: 800; color: var(--color-accent); }
+    .sub { font-size: 0.8125rem; color: #cbd5e1; }
+  }
+
+  .payout-list {
+    display: flex;
+    flex-direction: column;
+
+    .pay-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.875rem 0;
+      border-bottom: 1px solid var(--color-border-subtle);
+
+      &:last-child { border-bottom: none; }
+
+      .p-left {
+        display: flex;
+        flex-direction: column;
+
+        .p-desc { font-size: 0.9375rem; font-weight: 700; color: var(--color-text-main); }
+        .p-ref { font-size: 0.75rem; font-family: monospace; color: var(--color-text-muted); }
+      }
+
+      .p-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.25rem;
+
+        .p-amt { font-size: 1rem; font-weight: 800; color: #047857; }
+      }
+    }
+  }
+}

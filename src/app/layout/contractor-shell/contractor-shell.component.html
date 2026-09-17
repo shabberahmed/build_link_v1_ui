@@ -1,0 +1,76 @@
+<div class="shell-layout">
+  <header class="top-header">
+    <div class="header-left">
+      <button class="mobile-toggle" (click)="toggleMobileMenu()" [attr.aria-label]="'nav.toggleMenu' | t">☰</button>
+      <div class="brand-logo">
+        <span class="mark" aria-hidden="true">BL</span>
+        <div class="brand-copy">
+          <span class="brand-name">BuildLink</span>
+          <span class="brand-badge">{{ 'brand.siteOffice' | t }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-center" aria-hidden="true">
+      <span class="stamp">{{ todayLabel() }}</span>
+    </div>
+
+    <div class="header-right">
+      <app-language-switcher [inverted]="true"></app-language-switcher>
+      <app-button class="desk-action" variant="ghost" size="sm" [inverted]="true" (btnClick)="switchToWorkerRole()">{{ 'nav.fieldView' | t }}</app-button>
+      <a routerLink="/contractor/notifications" class="icon-nav-btn" [attr.aria-label]="'nav.notifications' | t">
+        <svg class="bell-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+          <path d="M10 21a2 2 0 0 0 4 0" />
+        </svg>
+        @if (notificationStore.unreadCount()) {
+          <span class="nav-badge">{{ notificationStore.unreadCount() }}</span>
+        }
+      </a>
+      <div class="user-pill">
+        <span class="user-avatar">
+          <app-avatar [src]="authService.currentUser()?.avatar ?? ''" [name]="authService.currentUser()?.name ?? ''" size="sm" [round]="true"></app-avatar>
+        </span>
+        <div class="user-meta">
+          <span class="user-name">{{ authService.currentUser()?.name }}</span>
+          <span class="user-comp">{{ authService.currentUser()?.companyOrTrade }}</span>
+        </div>
+      </div>
+      <span class="header-divider" aria-hidden="true"></span>
+      <app-button class="desk-action" variant="outline" size="sm" [inverted]="true" (btnClick)="logout()">{{ 'nav.signOut' | t }}</app-button>
+    </div>
+  </header>
+
+  <div class="body-wrapper">
+    @if (isMobileMenuOpen()) {
+      <button class="nav-scrim" type="button" [attr.aria-label]="'nav.closeMenu' | t" (click)="isMobileMenuOpen.set(false)"></button>
+    }
+    <aside [class]="'sidebar' + (isMobileMenuOpen() ? ' open' : '')">
+      <nav class="nav-menu" [attr.aria-label]="'nav.siteOffice' | t">
+        <div class="nav-section-title">{{ 'nav.yard' | t }}</div>
+        <a routerLink="/contractor/dashboard" routerLinkActive="active" (click)="isMobileMenuOpen.set(false)" class="nav-item">{{ 'nav.board' | t }}</a>
+        <a routerLink="/contractor/workforce" routerLinkActive="active" (click)="isMobileMenuOpen.set(false)" class="nav-item">{{ 'nav.people' | t }}</a>
+        <a routerLink="/contractor/crews" routerLinkActive="active" (click)="isMobileMenuOpen.set(false)" class="nav-item">{{ 'nav.crews' | t }}</a>
+        <a routerLink="/contractor/availability" routerLinkActive="active" (click)="isMobileMenuOpen.set(false)" class="nav-item">{{ 'nav.calendar' | t }}</a>
+        <a routerLink="/contractor/machinery" routerLinkActive="active" (click)="isMobileMenuOpen.set(false)" class="nav-item">{{ 'nav.plant' | t }}</a>
+
+        <div class="nav-section-title">{{ 'nav.market' | t }}</div>
+        <a routerLink="/contractor/find-workforce" routerLinkActive="active" (click)="isMobileMenuOpen.set(false)" class="nav-item">{{ 'nav.source' | t }}</a>
+        <a routerLink="/contractor/requests" routerLinkActive="active" (click)="isMobileMenuOpen.set(false)" class="nav-item">{{ 'nav.orders' | t }}</a>
+
+        <div class="nav-section-title">{{ 'nav.sites' | t }}</div>
+        <a routerLink="/contractor/projects" routerLinkActive="active" (click)="isMobileMenuOpen.set(false)" class="nav-item">{{ 'nav.sites' | t }}</a>
+        <a routerLink="/contractor/network" routerLinkActive="active" (click)="isMobileMenuOpen.set(false)" class="nav-item">{{ 'nav.network' | t }}</a>
+        <a routerLink="/contractor/payments" routerLinkActive="active" (click)="isMobileMenuOpen.set(false)" class="nav-item">{{ 'nav.ledger' | t }}</a>
+      </nav>
+      <div class="sidebar-foot">
+        <button type="button" class="nav-item" (click)="isMobileMenuOpen.set(false); switchToWorkerRole()">{{ 'nav.fieldView' | t }}</button>
+        <button type="button" class="nav-item" (click)="logout()">{{ 'nav.signOut' | t }}</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

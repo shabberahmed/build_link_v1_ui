@@ -1,0 +1,193 @@
+.dashboard-page {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.page-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 48px 16px 16px;
+
+  .page-sub { text-align: center; }
+}
+
+.board-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  .kicker {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .greeting {
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    line-height: 1;
+    margin-top: 4px;
+  }
+
+  .subtitle {
+    color: var(--color-text-muted);
+    margin-top: 8px;
+    max-width: 48ch;
+  }
+
+  .quick-actions { display: flex; gap: 8px; }
+}
+
+.attention {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 20px;
+  padding: 22px;
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+
+  h2 { font-family: var(--font-display); font-size: 1.4rem; }
+  p { font-size: 0.85rem; color: var(--color-text-muted); }
+
+  .attention-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .ticket {
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 12px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+
+    .ticket-count {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+
+    strong { display: block; }
+    span { font-size: 0.8rem; color: var(--color-text-muted); }
+    .ticket-rate { font-family: var(--font-mono); font-size: 0.8rem; }
+  }
+}
+
+.lanes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.lane {
+  min-height: 280px;
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  background: var(--color-surface-elevated);
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 12px;
+    h2 { font-family: var(--font-display); font-size: 1.25rem; }
+    span { font-family: var(--font-mono); font-size: 0.85rem; }
+  }
+
+  &.lane-free { background-color: #eef8f5; }
+  &.lane-site { background-color: #eef4fb; }
+  &.lane-rest { background-color: #f4f6f9; }
+
+  .chip {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+
+    span { color: var(--color-text-muted); }
+  }
+
+  .lane-link {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--color-accent);
+  }
+}
+
+.lower-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 0.9fr;
+  gap: 20px;
+}
+
+.sites, .meters {
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 18px 20px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  h2 { font-family: var(--font-display); font-size: 1.3rem; }
+}
+
+.site-row {
+  display: grid;
+  grid-template-columns: 1fr 160px;
+  gap: 16px;
+  align-items: center;
+  padding: 12px 0;
+  border-top: 1px solid var(--color-border-subtle);
+
+  h3 { font-size: 0.95rem; }
+  p { font-size: 0.8rem; color: var(--color-text-muted); }
+}
+
+.meters {
+  h2 { font-family: var(--font-display); font-size: 1.3rem; margin-bottom: 12px; }
+
+  .meter {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: 12px 0 4px;
+  }
+
+  .trust {
+    display: block;
+    margin-top: 16px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--color-accent);
+  }
+}
+
+.empty-text { color: var(--color-text-muted); font-size: 0.9rem; }
+
+@media (max-width: 1024px) {
+  .attention, .lanes, .lower-grid, .site-row {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,85 @@
+.notifications-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .page-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--color-primary);
+      letter-spacing: -0.02em;
+    }
+    .page-sub {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+    }
+  }
+
+  .notif-list {
+    display: flex;
+    flex-direction: column;
+
+    .notif-item {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      padding: 1rem;
+      border-bottom: 1px solid var(--color-border-subtle);
+      cursor: pointer;
+      position: relative;
+      transition: background-color var(--transition-fast);
+
+      &:hover { background-color: var(--color-surface-hover); }
+
+      &.unread {
+        background-color: #f0f9ff;
+      }
+
+      .n-icon {
+        font-size: 1.25rem;
+      }
+
+      .n-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+
+        .n-top {
+          display: flex;
+          justify-content: space-between;
+
+          .n-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--color-text-main);
+          }
+
+          .n-time {
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+          }
+        }
+
+        .n-msg {
+          font-size: 0.875rem;
+          color: var(--color-text-muted);
+        }
+      }
+
+      .dot-unread {
+        width: 8px;
+        height: 8px;
+        border-radius: var(--radius-full);
+        background-color: var(--color-teal);
+        position: absolute;
+        right: 1rem;
+        top: 1rem;
+      }
+    }
+  }
+}

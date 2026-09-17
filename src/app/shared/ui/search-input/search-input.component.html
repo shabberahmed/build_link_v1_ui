@@ -1,0 +1,13 @@
+<div class="search-box">
+  <span class="search-icon">🔍</span>
+  <input
+    type="text"
+    [placeholder]="placeholder()"
+    [ngModel]="value()"
+    (ngModelChange)="onInput($event)"
+    class="search-field"
+  />
+  @if (value()) {
+    <button class="clear-btn" (click)="onInput('')">✕</button>
+  }
+</div>

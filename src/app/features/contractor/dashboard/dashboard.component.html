@@ -1,0 +1,115 @@
+<div class="dashboard-page">
+  @if (workforceStore.loading() || projectStore.loading() || marketplaceStore.loading() || machineryStore.loading()) {
+    <div class="page-loader">
+      <app-loader [compact]="true" messageKey="loader.fetching"></app-loader>
+      <p class="page-sub">{{ 'loader.fetching' | t }}</p>
+    </div>
+  }
+
+  <div class="board-head">
+    <div>
+      <p class="kicker">{{ 'dash.kicker' | t }}</p>
+      <h1 class="greeting">{{ 'dash.greeting' | t: { name: firstName() } }}</h1>
+      <p class="subtitle">{{ 'dash.subtitle' | t }}</p>
+    </div>
+    <div class="quick-actions">
+      <a routerLink="/contractor/find-workforce"><app-button variant="accent">{{ 'dash.sourceLabour' | t }}</app-button></a>
+      <a routerLink="/contractor/workforce"><app-button variant="outline">{{ 'dash.addPerson' | t }}</app-button></a>
+      <a routerLink="/contractor/machinery"><app-button variant="secondary">{{ 'dash.addPlant' | t }}</app-button></a>
+    </div>
+  </div>
+
+  <section class="attention" [attr.aria-label]="'dash.needsAttention' | t">
+    <div class="attention-meta">
+      <h2>{{ 'dash.needsCall' | t }}</h2>
+      <p>{{ 'dash.openOrders' | t: { count: marketplaceStore.pendingRequestsCount() } }}</p>
+    </div>
+    <div class="attention-list">
+      @for (req of marketplaceStore.pendingRequests(); track req.id) {
+        <a class="ticket" routerLink="/contractor/requests">
+          <span class="ticket-count">{{ req.workerCount }}</span>
+          <div>
+            <strong>{{ req.trade | locLabel:'trade' }}</strong>
+            <span>{{ req.requesterContractorName }} · {{ req.location }}</span>
+          </div>
+          <span class="ticket-rate">₹{{ req.dailyRate }}{{ 'dash.perD' | t }}</span>
+        </a>
+      } @empty {
+        <p class="empty-text">{{ 'dash.orderRackClear' | t }}</p>
+      }
+    </div>
+  </section>
+
+  <section class="lanes" [attr.aria-label]="'dash.workforceLanes' | t">
+    <div class="lane lane-free">
+      <header>
+        <h2>{{ 'dash.freeSoon' | t }}</h2>
+        <span>{{ workforceStore.availableCount() + workforceStore.comingAvailableCount() }}</span>
+      </header>
+      @for (w of availableLane(); track w.id) {
+        <div class="chip">
+          <b>{{ w.name }}</b>
+          <span>{{ w.trade | locLabel:'trade' }}</span>
+        </div>
+      }
+      <a routerLink="/contractor/workforce" class="lane-link">{{ 'dash.openPeople' | t }}</a>
+    </div>
+    <div class="lane lane-site">
+      <header>
+        <h2>{{ 'dash.onSite' | t }}</h2>
+        <span>{{ workforceStore.deployedCount() }}</span>
+      </header>
+      @for (w of deployedLane(); track w.id) {
+        <div class="chip">
+          <b>{{ w.name }}</b>
+          <span>{{ i18n.entity('project', w.currentProjectId ?? '', 'name', w.currentProjectName) || (w.trade | locLabel:'trade') }}</span>
+        </div>
+      }
+      <a routerLink="/contractor/projects" class="lane-link">{{ 'dash.openSites' | t }}</a>
+    </div>
+    <div class="lane lane-rest">
+      <header>
+        <h2>{{ 'dash.restLeave' | t }}</h2>
+        <span>{{ workforceStore.onLeaveCount() }}</span>
+      </header>
+      @for (w of restLane(); track w.id) {
+        <div class="chip">
+          <b>{{ w.name }}</b>
+          <span>{{ w.trade | locLabel:'trade' }}</span>
+        </div>
+      } @empty {
+        <p class="empty-text">{{ 'dash.nobodyLeave' | t }}</p>
+      }
+    </div>
+  </section>
+
+  <div class="lower-grid">
+    <section class="sites">
+      <div class="section-header">
+        <h2>{{ 'dash.liveSites' | t }}</h2>
+        <a routerLink="/contractor/projects"><app-button variant="ghost" size="sm">{{ 'common.manage' | t }}</app-button></a>
+      </div>
+      @for (proj of projectStore.activeProjects(); track proj.id) {
+        <div class="site-row">
+          <div>
+            <h3>{{ i18n.entity('project', proj.id, 'name', proj.name) }}</h3>
+            <p>{{ proj.location }} · {{ 'dash.peopleRatio' | t: { deployed: proj.deployedWorkers, required: proj.requiredWorkers } }}</p>
+          </div>
+          <app-progress-bar [value]="proj.progressPercentage" color="accent" [showLabel]="true"></app-progress-bar>
+        </div>
+      }
+    </section>
+
+    <aside class="meters">
+      <h2>{{ 'dash.yardHealth' | t }}</h2>
+      <div class="meter"><span>{{ 'dash.utilization' | t }}</span><strong>{{ utilization() }}%</strong></div>
+      <app-progress-bar [value]="utilization()" color="primary"></app-progress-bar>
+      <div class="meter"><span>{{ 'dash.attendance' | t }}</span><strong>96%</strong></div>
+      <app-progress-bar [value]="96" color="available"></app-progress-bar>
+      <div class="meter"><span>{{ 'dash.retention' | t }}</span><strong>91%</strong></div>
+      <app-progress-bar [value]="91" color="teal"></app-progress-bar>
+      <div class="meter"><span>{{ 'dash.plantIdle' | t }}</span><strong>{{ machineryStore.availableCount() }} / {{ machineryStore.totalCount() }}</strong></div>
+      <a routerLink="/contractor/machinery" class="trust">{{ 'dash.openPlant' | t }}</a>
+    </aside>
+  </div>
+</div>

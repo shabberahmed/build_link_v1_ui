@@ -1,0 +1,29 @@
+<div class="worker-earn-page">
+  <div class="w-title">
+    <h2>{{ 'workerEarn.title' | t }}</h2>
+    <p>{{ 'workerEarn.sub' | t }}</p>
+  </div>
+
+  <div class="earn-card-hero">
+    <span class="lbl">{{ 'workerEarn.totalMonth' | t }}</span>
+    <h2 class="amount">₹{{ store.totalEarningsMonth().toLocaleString('en-IN') }}</h2>
+    <p class="sub">{{ 'workerEarn.daysAvg' | t }}</p>
+  </div>
+
+  <app-card>
+    <div class="payout-list">
+      @for (pay of store.earnings(); track pay.id) {
+        <div class="pay-item">
+          <div class="p-left">
+            <span class="p-desc">{{ i18n.entity('payment', pay.id, 'period', pay.periodDescription) }}</span>
+            <span class="p-ref">{{ 'workerEarn.ref' | t: { ref: pay.referenceNumber } }}</span>
+          </div>
+          <div class="p-right">
+            <span class="p-amt">₹{{ pay.amount.toLocaleString('en-IN') }}</span>
+            <app-badge variant="available">{{ pay.status | locLabel:'payStatus' }}</app-badge>
+          </div>
+        </div>
+      }
+    </div>
+  </app-card>
+</div>

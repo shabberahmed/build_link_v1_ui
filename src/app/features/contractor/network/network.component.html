@@ -1,0 +1,53 @@
+<div class="network-page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">{{ 'network.title' | t }}</h1>
+      <p class="page-sub">{{ 'network.sub' | t }}</p>
+    </div>
+  </div>
+
+  <div class="network-grid">
+    @for (c of networkStore.contractors(); track c.id) {
+      <app-contractor-card
+        [contractor]="c"
+        (connectClick)="onConnectToggle($event)"
+        (viewProfileClick)="openContractorModal($event)">
+      </app-contractor-card>
+    }
+  </div>
+
+  @if (selectedContractorForModal(); as c) {
+    <app-modal [isOpen]="true" [title]="'network.detailed' | t: { name: c.companyName }" (closeModal)="closeContractorModal()">
+      <div class="contractor-profile-view">
+        <div class="cp-header">
+          <img [src]="c.avatarUrl" [alt]="c.companyName" class="cp-avatar" />
+          <div>
+            <h3 class="cp-title">{{ c.companyName }} @if (c.verified) { ✓ }</h3>
+            <p class="cp-contact">{{ 'network.contact' | t: { person: c.contactPerson, phone: c.phone } }}</p>
+            <p class="cp-sub">📍 {{ 'network.locExp' | t: { location: c.location, years: c.experienceYears } }}</p>
+          </div>
+        </div>
+
+        <div class="cp-trust-section">
+          <app-trust-score [trustScore]="c.trustScore"></app-trust-score>
+        </div>
+
+        <div class="cp-section">
+          <h4>{{ 'network.specs' | t }}</h4>
+          <div class="cp-chips">
+            @for (sp of c.specializations; track sp) {
+              <span class="cp-chip">{{ i18n.spec(sp) }}</span>
+            }
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <app-button variant="outline" (btnClick)="closeContractorModal()">{{ 'common.close' | t }}</app-button>
+          <app-button variant="primary" (btnClick)="onConnectToggle(c)">
+            {{ c.connected ? ('network.disconnect' | t) : ('network.connect' | t) }}
+          </app-button>
+        </div>
+      </div>
+    </app-modal>
+  }
+</div>

@@ -1,0 +1,53 @@
+<div class="contractor-card">
+  <div class="c-header">
+    <app-avatar [src]="contractor().avatarUrl" [name]="contractor().companyName" size="lg"></app-avatar>
+    <div class="c-title-box">
+      <div class="title-row">
+        <h4 class="company-name">{{ contractor().companyName }}</h4>
+        @if (contractor().verified) {
+          <span class="verified-badge" [title]="'card.verifiedTitle' | t">✓ {{ 'card.verified' | t }}</span>
+        }
+      </div>
+      <p class="contact-person">{{ contractor().contactPerson }} • {{ 'common.yearsInIndustry' | t: { years: contractor().experienceYears } }}</p>
+      <div class="rating-bar">
+        <span class="star">★</span>
+        <span class="rating-num">{{ contractor().rating }}</span>
+        <span class="dot">•</span>
+        <span class="trust">{{ 'card.trustScore' | t: { score: contractor().trustScore.overall } }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="c-body">
+    <div class="specs-chips">
+      @for (spec of contractor().specializations; track spec) {
+        <span class="spec-chip">{{ i18n.spec(spec) }}</span>
+      }
+    </div>
+
+    <div class="stats-grid">
+      <div class="s-item">
+        <span class="s-label">{{ 'card.workforce' | t }}</span>
+        <span class="s-val">{{ 'card.workersCount' | t: { count: contractor().workforceCount } }}</span>
+      </div>
+      <div class="s-item">
+        <span class="s-label">{{ 'card.projects' | t }}</span>
+        <span class="s-val">{{ 'card.completed' | t: { count: contractor().completedProjects } }}</span>
+      </div>
+      <div class="s-item">
+        <span class="s-label">{{ 'card.location' | t }}</span>
+        <span class="s-val">{{ contractor().location }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="c-footer">
+    <app-button variant="outline" size="sm" (btnClick)="viewProfileClick.emit(contractor())">{{ 'card.viewProfile' | t }}</app-button>
+    <app-button
+      [variant]="contractor().connected ? 'secondary' : 'primary'"
+      size="sm"
+      (btnClick)="connectClick.emit(contractor())">
+      {{ contractor().connected ? ('card.connected' | t) : ('card.connect' | t) }}
+    </app-button>
+  </div>
+</div>

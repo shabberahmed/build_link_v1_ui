@@ -1,0 +1,65 @@
+.trust-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+
+  .trust-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border-subtle);
+
+    .overall-badge {
+      background-color: var(--color-primary);
+      color: var(--color-text-inverse);
+      padding: 0.5rem 0.875rem;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-baseline: baseline;
+      gap: 0.15rem;
+
+      .score-num {
+        font-size: 1.5rem;
+        font-weight: 800;
+
+      }
+      .score-max {
+        font-size: 0.75rem;
+        color: var(--color-text-light);
+      }
+    }
+
+    .trust-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--color-text-main);
+    }
+    .trust-sub {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+  }
+
+  .trust-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    margin-top: 1rem;
+
+    .metric-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+
+      .metric-info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: var(--color-text-main);
+      }
+    }
+  }
+}

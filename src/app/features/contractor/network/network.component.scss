@@ -1,0 +1,92 @@
+.network-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  .page-header {
+    .page-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--color-primary);
+      letter-spacing: -0.02em;
+    }
+    .page-sub {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+    }
+  }
+
+  .network-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    gap: 1.25rem;
+  }
+}
+
+.contractor-profile-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  .cp-header {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+
+    .cp-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: var(--radius-full);
+      object-fit: cover;
+    }
+
+    .cp-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--color-text-main);
+    }
+
+    .cp-contact {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--color-text-main);
+    }
+
+    .cp-sub {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+  }
+
+  .cp-section {
+    h4 {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--color-text-main);
+      margin-bottom: 0.35rem;
+    }
+
+    .cp-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+
+      .cp-chip {
+        background-color: var(--color-surface-hover);
+        border: 1px solid var(--color-border);
+        font-size: 0.78rem;
+        padding: 0.2rem 0.5rem;
+        border-radius: var(--radius-xs);
+        font-weight: 600;
+      }
+    }
+  }
+
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border-subtle);
+  }
+}

@@ -1,0 +1,72 @@
+.worker-prof-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  .prof-header {
+    display: flex;
+    gap: 1.25rem;
+    align-items: center;
+
+    .prof-meta {
+      display: flex;
+      flex-direction: column;
+
+      .p-name { font-size: 1.35rem; font-weight: 800; color: var(--color-primary); }
+      .p-trade { font-size: 0.875rem; font-weight: 600; color: var(--color-text-muted); }
+      .p-rating {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        margin: 0.25rem 0;
+
+        .star { color: var(--color-accent); font-size: 0.95rem; }
+        .num { font-weight: 700; font-size: 0.875rem; }
+      }
+      .p-loc { font-size: 0.8125rem; color: var(--color-text-muted); }
+    }
+  }
+
+  .prof-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+
+    .pm-box {
+      display: flex;
+      flex-direction: column;
+
+      .lbl { font-size: 0.68rem; text-transform: uppercase; font-weight: 600; color: var(--color-text-muted); }
+      .val {
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: var(--color-text-main);
+
+        &.rate { color: #047857; }
+      }
+    }
+  }
+
+  .skills-box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    h3 { font-size: 0.95rem; font-weight: 700; }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+
+      .sk-chip {
+        background-color: var(--color-bg-app);
+        border: 1px solid var(--color-border);
+        font-size: 0.78rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: var(--radius-xs);
+        font-weight: 600;
+      }
+    }
+  }
+}

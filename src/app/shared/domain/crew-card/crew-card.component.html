@@ -1,0 +1,46 @@
+<div class="crew-card">
+  <div class="crew-header">
+    <div>
+      <h4 class="crew-name">{{ i18n.entity('crew', crew().id, 'name', crew().name) }}</h4>
+      <p class="contractor-name">{{ 'card.by' | t: { name: crew().contractorName } }}</p>
+    </div>
+    <app-badge [variant]="crew().status === 'AVAILABLE' ? 'available' : 'coming-soon'">
+      {{ crew().status | locLabel:'workerStatus' }}
+    </app-badge>
+  </div>
+
+  <div class="crew-body">
+    <div class="stats-row">
+      <div class="stat-pill">
+        <span class="pill-label">{{ 'card.totalWorkforce' | t }}</span>
+        <span class="pill-val">{{ 'card.workersN' | t: { count: crew().totalWorkers } }}</span>
+      </div>
+      <div class="stat-pill">
+        <span class="pill-label">{{ 'card.avgRating' | t }}</span>
+        <span class="pill-val">★ {{ crew().averageRating }}</span>
+      </div>
+    </div>
+
+    <div class="breakdown-box">
+      <span class="box-title">{{ 'card.composition' | t }}</span>
+      <div class="comp-list">
+        @for (item of crew().composition; track item.trade) {
+          <div class="comp-item">
+            <span class="trade">{{ item.trade | locLabel:'trade' }}</span>
+            <span class="count">{{ item.count }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="meta-row">
+      <span>📍 {{ crew().location }}</span>
+      <span>{{ 'card.avail' | t: { date: crew().availableFrom } }}</span>
+      <span class="rate">₹{{ crew().dailyRatePerWorker }}{{ 'common.perWorkerDay' | t }}</span>
+    </div>
+  </div>
+
+  <div class="crew-footer">
+    <app-button variant="accent" size="sm" (btnClick)="requestCrewClick.emit(crew())">{{ 'card.requestCrew' | t }}</app-button>
+  </div>
+</div>

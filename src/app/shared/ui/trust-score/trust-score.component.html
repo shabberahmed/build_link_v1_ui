@@ -1,0 +1,46 @@
+<div class="trust-card">
+  <div class="trust-header">
+    <div class="overall-badge">
+      <span class="score-num">{{ trustScore().overall }}</span>
+      <span class="score-max">/100</span>
+    </div>
+    <div class="header-text">
+      <h4 class="trust-title">{{ 'card.trustTitle' | t }}</h4>
+      <p class="trust-sub">{{ 'card.trustSub' | t }}</p>
+    </div>
+  </div>
+
+  <div class="trust-metrics">
+    <div class="metric-row">
+      <div class="metric-info">
+        <span class="metric-name">{{ 'card.payRel' | t }}</span>
+        <span class="metric-val">{{ trustScore().paymentReliability }}%</span>
+      </div>
+      <app-progress-bar [value]="trustScore().paymentReliability" color="available"></app-progress-bar>
+    </div>
+
+    <div class="metric-row">
+      <div class="metric-info">
+        <span class="metric-name">{{ 'card.workRel' | t }}</span>
+        <span class="metric-val">{{ trustScore().workforceReliability }}%</span>
+      </div>
+      <app-progress-bar [value]="trustScore().workforceReliability" color="teal"></app-progress-bar>
+    </div>
+
+    <div class="metric-row">
+      <div class="metric-info">
+        <span class="metric-name">{{ 'card.projComp' | t }}</span>
+        <span class="metric-val">{{ trustScore().projectCompletion }}%</span>
+      </div>
+      <app-progress-bar [value]="trustScore().projectCompletion" color="primary"></app-progress-bar>
+    </div>
+
+    <div class="metric-row">
+      <div class="metric-info">
+        <span class="metric-name">{{ 'card.professionalism' | t }}</span>
+        <span class="metric-val">{{ trustScore().professionalism }}%</span>
+      </div>
+      <app-progress-bar [value]="trustScore().professionalism" color="accent"></app-progress-bar>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,12 @@
+<div [class]="'stat-box accent-' + accent()">
+  <div class="stat-header">
+    <span class="stat-title">{{ title() }}</span>
+    @if (icon()) {
+      <span class="stat-icon">{{ icon() }}</span>
+    }
+  </div>
+  <div class="stat-val">{{ value() }}</div>
+  @if (subtext()) {
+    <div class="stat-sub">{{ subtext() }}</div>
+  }
+</div>
